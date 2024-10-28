@@ -61,7 +61,8 @@ echo   "FFlagDebugDisableTelemetryV2Counter": true,
 echo   "FFlagDebugDisableTelemetryV2Event": true,
 echo   "FFlagDebugDisableTelemetryV2Stat": true,
 echo   "DFIntDebugFRMQualityLevelOverride": 3,
-echo   "FIntRobloxGuiBlurIntensity": 0
+echo   "FIntRobloxGuiBlurIntensity": 0,
+echo   "FFlagMovePrerender": true,
 echo }
 ) > "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings\ClientAppSettings.json"
 
