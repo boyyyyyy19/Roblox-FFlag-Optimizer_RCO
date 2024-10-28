@@ -33,6 +33,7 @@ The script performs the following actions:
   - Optimized graphics quality
   - Enhanced network settings
   - Reduced visual effects that impact performance
+  - (Pre-rendering) A technique where frames are rendered in advance to improve performance and reduce latency.
 
 - **Visual Quality**:
   - Configured texture quality
