@@ -49,7 +49,7 @@ The script performs the following actions:
 ## How to Use
 
 1. Copy and paste the batch script
-2. Run it as administrator # - not necessary for use -
+2. Run it as administrator - NOT NECESSARY FOR USE -
 3. Wait for the confirmation message
 4. The ClientSettings folder will open automatically
 5. Restart Roblox to apply the changes
