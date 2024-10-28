@@ -48,8 +48,8 @@ The script performs the following actions:
 
 ## How to Use
 
-1. Download the batch script
-2. Run it as administrator
+1. Copy and paste the batch script
+2. Run it as administrator # - not necessary for use -
 3. Wait for the confirmation message
 4. The ClientSettings folder will open automatically
 5. Restart Roblox to apply the changes
