@@ -14,7 +14,7 @@ mkdir "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings" 2>nul
 (
 echo {
 echo   "FFlagGameBasicSettingsFramerateCap4": true,
-echo   "DFIntTaskSchedulerTargetFps": 144,
+echo   "DFIntTaskSchedulerTargetFps": 240,
 echo   "DFIntConnectionMTUSize": 1472,
 echo   "FFlagDebugGraphicsPreferD3D11": true,
 echo   "DFFlagDebugRenderForceTechnologyVoxel": true,
