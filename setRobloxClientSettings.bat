@@ -10,13 +10,29 @@ for /f "delims=" %%i in ('dir /b /ad /od "%LOCALAPPDATA%\Roblox\Versions\version
 :: Create the ClientSettings directory in the latest version folder
 mkdir "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings" 2>nul
 
+:: Detect if the PC is newer (8GB or more RAM) or older (less than 8GB)
+set "isNewerPC=false"
+for /f "tokens=2 delims==" %%A in ('wmic ComputerSystem get TotalPhysicalMemory /value') do (
+    set /a "ramGB=%%A / 1073741824"
+    if !ramGB! GEQ 8 set "isNewerPC=true"
+)
+
 :: Write the flags to ClientAppSettings.json
 (
 echo {
 echo   "FFlagGameBasicSettingsFramerateCap4": true,
 echo   "DFIntTaskSchedulerTargetFps": 240,
 echo   "DFIntConnectionMTUSize": 1472,
-echo   "FFlagDebugGraphicsPreferD3D11": true,
+:: Apply graphics settings based on RAM size
+if "%isNewerPC%"=="true" (
+    echo   "FFlagDebugGraphicsDisableDirect3D11": false,
+    echo   "FFlagDebugGraphicsPreferD3D11": true,
+) else (
+    echo   "FFlagDebugGraphicsDisableDirect3D11": false,
+    echo   "FFlagDebugGraphicsPreferD3D11": false,
+    echo   "FFlagDebugGraphicsPreferD3D11FL10": true,
+    echo   "FFlagGraphicsEnableD3D10Compute": true,
+)
 echo   "DFFlagDebugRenderForceTechnologyVoxel": true,
 echo   "FFlagHandleAltEnterFullscreenManually": false,
 echo   "FStringPartTexturePackTable2022": "{\"glass\":{\"ids\":[\"rbxassetid://9873284556\",\"rbxassetid://9438453972\"],\"color\":[254,254,254,7]}}",
