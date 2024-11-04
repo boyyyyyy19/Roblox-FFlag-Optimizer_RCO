@@ -13,8 +13,8 @@ mkdir "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings" 2>nul
 :: Detect if the PC is newer (8GB or more RAM) or older (less than 8GB)
 set "isNewerPC=false"
 for /f "tokens=2 delims==" %%A in ('wmic ComputerSystem get TotalPhysicalMemory /value') do (
-    set /a "ramGB=%%A / 1073741824"
-    if !ramGB! GEQ 8 set "isNewerPC=true"
+    set "ramBytes=%%A"
+    if !ramBytes! GEQ 8589934592 set "isNewerPC=true"
 )
 
 :: Write the flags to ClientAppSettings.json
