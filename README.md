@@ -1,117 +1,150 @@
 # Roblox Performance Optimizer
 
-A batch script that automatically configures Roblox's client settings for optimal performance while maintaining visual quality based on your system specifications.
+A specialized batch script that dynamically configures Roblox's client settings for optimal performance through intelligent hardware detection and automated configuration management.
 
-## Features
+## Core Features
 
-### Automatic Hardware Detection
-- Detects system RAM (8GB threshold)
-- Detects GPU memory (4GB threshold)
-- Automatically adjusts settings based on your hardware capabilities
+### Hardware Detection System
+- Automated RAM capacity detection (8GB threshold)
+- GPU VRAM capacity analysis (4GB threshold)
+- Dynamic settings adaptation based on hardware capabilities
 
-### Performance Optimizations
-- Unlocks FPS cap to 360
-- Optimizes network packet size for better connection
-- Configures DirectX settings based on hardware capability
-- Adjusts texture quality based on available system resources
-- Implements MSAA (anti-aliasing) based on GPU capability
+### Performance Optimization Framework
+- FPS uncapping system (360 FPS maximum)
+- Network packet optimization protocol
+- Hardware-aware DirectX configuration
+- Resource-based texture quality management
+- Dynamic MSAA implementation
 
-### Graphics Settings
-- `DFIntTaskSchedulerTargetFps`: 360 (Increases FPS cap)
-- `DFIntConnectionMTUSize`: 1472 (Optimizes network packet size)
-- `FIntDebugForceMSAASamples`: 8/4 (Anti-aliasing quality based on GPU)
-- `DFIntTextureQualityOverride`: 3/2 (Texture quality based on RAM)
-- `FFlagDisablePostFx`: true (Disables post-processing for better performance)
-- `FFlagFastGPULightCulling3`: true (Optimizes light rendering)
-- `FFlagMovePrerender`: true (Improves frame pacing)
-- `FFlagPreloadTextureData`: true (Reduces texture pop-in)
+## Technical Specifications
 
-### Quality of Life Features
-- Creates backup of settings
-- Automatically finds latest Roblox version
-- Opens settings folder after completion
-- Disables unnecessary telemetry
-- Disables beta features that might impact performance
+### Core Performance Parameters
+```json
+{
+  "DFIntTaskSchedulerTargetFps": 360,
+  "DFIntConnectionMTUSize": 1472,
+  "FIntDebugForceMSAASamples": "8/4 (GPU-dependent)",
+  "DFIntTextureQualityOverride": "3/0 (RAM-dependent)",
+  "FFlagDisablePostFx": true,
+  "FFlagFastGPULightCulling3": true,
+  "DFIntDebugFRMQualityLevelOverride": 1
+}
+```
 
-## Installation
+### CSG Level of Detail Configuration
+```json
+{
+  "DFIntCSGLevelOfDetailSwitchingDistance": 250,
+  "DFIntCSGLevelOfDetailSwitchingDistanceL12": 500,
+  "DFIntCSGLevelOfDetailSwitchingDistanceL23": 750,
+  "DFIntCSGLevelOfDetailSwitchingDistanceL34": 1000
+}
+```
 
-1. Download the `.bat` file
-2. Run it as administrator (recommended)
-3. The script will automatically:
-   - Create necessary directories
-   - Detect your system specifications
-   - Apply optimized settings
-   - Create a backup of the configuration
+## Implementation Guide
 
-## System Requirements
+### Prerequisites
+- Operating System: Windows 7 or later
+- Minimum RAM: 4GB
+- GPU: DirectX 10 compatible
+- Roblox: Latest version installed
 
-### Minimum:
-- Windows 7 or higher
-- 4GB RAM
-- DirectX 10 capable GPU
+### Optimal System Configuration
+- Operating System: Windows 10/11
+- RAM: 8GB or higher
+- GPU: DirectX 11 compatible with 4GB+ VRAM
+- Storage: 100MB free space
 
-### Recommended:
-- Windows 10/11
-- 8GB+ RAM
-- DirectX 11 capable GPU with 4GB+ VRAM
+### Installation Protocol
+1. Download the batch script
+2. Execute with administrative privileges
+3. Automated Process:
+   - Directory structure creation
+   - Hardware capability assessment
+   - Settings optimization deployment
+   - Configuration verification
 
-## Advanced Settings Explanation
+## Technical Architecture
 
-### Graphics Settings
-- DirectX 11 is enabled on newer PCs for better performance
-- DirectX 10 fallback is configured for older systems
-- Texture quality is set higher (3) on 8GB+ RAM systems
-- MSAA is set to 8x on high-end GPUs, 4x on others
+### Graphics Pipeline Configuration
+- DirectX 11 enablement for modern hardware
+- DirectX 10 fallback system for legacy support
+- RAM-dependent texture quality scaling
+- GPU-dependent MSAA implementation
 
-### Performance Settings
-- Disabled post-processing effects for better performance
-- Optimized grass rendering distances
-- Enabled fast GPU light culling
-- Configured deterministic rendering for stability
-- Disabled dynamic heads and beta facial animations
-- Pre-loading enabled for textures and fonts
+### Performance Optimization Layer
+```json
+{
+  "FFlagDisablePostFx": true,
+  "FIntFRMMinGrassDistance": 0,
+  "FFlagDebugRenderingSetDeterministic": true,
+  "FFlagFastGPULightCulling3": true,
+  "FFlagPreloadTextureData": true
+}
+```
 
-### Network Settings
-- Optimized MTU size for better network performance
-- Configured voice chat volume settings
+### Network Stack Optimization
+- MTU size optimization (1472 bytes)
+- Voice chat volume normalization
+- Connection stability enhancements
 
-### UI Settings
-- Disabled blur effects for better performance
-- Disabled beta features and modernization
-- Configured menu behavior for stability
+### Interface Optimization
+- Blur effect deactivation
+- Beta feature deactivation
+- Menu system optimization
+- Telemetry system deactivation
 
-## Troubleshooting
+## Troubleshooting Framework
 
-If you experience any issues:
-1. Check the backup file in `%LOCALAPPDATA%\Roblox\ClientSettings\`
-2. Verify that you have the latest Roblox version installed
-3. Run the script as administrator
-4. Make sure your system meets the minimum requirements
+### Error Resolution Protocol
+1. Verify Roblox installation integrity
+2. Confirm administrative privileges
+3. Validate system requirements compliance
+4. Clear existing ClientSettings directory if necessary
 
-## Notes
+### System Verification
+- Configuration deployment verification
+- Hardware detection system validation
+- Settings application confirmation
 
-- Settings are automatically applied to the latest Roblox version
-- A backup is created in case you need to restore previous settings
-- The script needs to be re-run after Roblox updates
-- Some settings may be overridden by future Roblox updates
+## Technical Notes
 
-## Safety
+### Implementation Considerations
+- Automatic version detection system
+- Configuration persistence across sessions
+- Update-resistant setting implementation
+- Official FFlag implementation
 
-This script:
-- Only modifies Roblox client settings
-- Creates backups of modified files
-- Doesn't modify any system files
-- Uses official Roblox FFlags
-- Can be easily reversed by deleting the ClientSettings folder
+### Security Framework
+- Client-side configuration only
+- No system file modification
+- Reversible implementation
+- Official parameter utilization
 
-## Contributing
+## Maintenance Protocol
 
-Feel free to suggest improvements or report issues. This script is maintained to keep up with Roblox's latest versions and optimal performance settings.
+### Regular Updates
+- Performance optimization refinements
+- Version compatibility maintenance
+- Hardware detection improvements
+- Feature enhancement implementation
 
-## Updates
+### Version Control
+- Configuration tracking
+- Setting persistence management
+- Update impact mitigation
+- Compatibility maintenance
 
-The script is regularly updated to include:
-- New performance optimizations
-- Support for latest Roblox versions
-- Better hardware detection
-- Additional quality of life features
+## Technical Specifications
+
+### Minimum Requirements
+- Processor: x64 compatible
+- RAM: 4GB minimum
+- GPU: DirectX 10 support
+- Storage: 50MB available
+
+### Recommended Configuration
+- Processor: Modern x64 multi-core
+- RAM: 8GB or higher
+- GPU: DirectX 11 with 4GB+ VRAM
+- Storage: 100MB available
