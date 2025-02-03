@@ -41,7 +41,7 @@ if "%isNewerPC%"=="true" (
     echo   "FFlagDebugGraphicsPreferD3D11": false,
     echo   "FFlagDebugGraphicsPreferD3D11FL10": true,
     echo   "FFlagGraphicsEnableD3D10Compute": true,
-    echo   "DFIntTextureQualityOverride": 2,
+    echo   "DFIntTextureQualityOverride": 0,
 )
 if "%isHighEndGPU%"=="true" (
     echo   "FIntDebugForceMSAASamples": 8,
@@ -89,21 +89,23 @@ echo   "FFlagDebugDisableTelemetryPoint": true,
 echo   "FFlagDebugDisableTelemetryV2Counter": true,
 echo   "FFlagDebugDisableTelemetryV2Event": true,
 echo   "FFlagDebugDisableTelemetryV2Stat": true,
-echo   "DFIntDebugFRMQualityLevelOverride": 4,
+echo   "DFIntDebugFRMQualityLevelOverride": 1,
 echo   "FFlagMovePrerender": true,
 echo   "FFlagEnableQuickGameLaunch": true,
 echo   "FFlagPreloadTextureData": true,
 echo   "FFlagEnableV3MenuABTest": false,
-echo   "FFlagEnableInGameMenuV3": false
+echo   "FFlagEnableInGameMenuV3": false,
+echo   "FFlagCoreGuiTypeSelfViewPresent": false,
+echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 500,
+echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 750,
+echo   "DFIntCSGLevelOfDetailSwitchingDistance": 250,
+echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 1000,
+echo   "DFFlagDebugPauseVoxelizer": false,
+echo   "FIntTerrainArraySliceSize": 0
 echo }
 ) > "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings\ClientAppSettings.json"
 
 echo Successfully wrote FFlags to: %LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings\ClientAppSettings.json
-
-:: Create a backup of the settings
-copy "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings\ClientAppSettings.json" "%LOCALAPPDATA%\Roblox\ClientSettings\ClientAppSettings.json.backup" >nul
-
-echo Created backup at: %LOCALAPPDATA%\Roblox\ClientSettings\ClientAppSettings.json.backup
 
 :: Open the folder in File Explorer
 start "" "%LOCALAPPDATA%\Roblox\Versions\!latest!\ClientSettings"
