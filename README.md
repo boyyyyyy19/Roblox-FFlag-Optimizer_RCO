@@ -27,7 +27,7 @@ A specialized batch script that dynamically configures Roblox's client settings 
   "DFIntTextureQualityOverride": "3/0 (RAM-dependent)",
   "FFlagDisablePostFx": true,
   "FFlagFastGPULightCulling3": true,
-  "DFIntDebugFRMQualityLevelOverride": 1
+  "DFIntDebugFRMQualityLevelOverride": 4
 }
 ```
 
