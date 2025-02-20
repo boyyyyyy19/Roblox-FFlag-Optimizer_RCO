@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 :: ================================================================
 :: ROBLOX UNIVERSAL PERFORMANCE OPTIMIZER
 :: Targets: All system configurations from legacy to high-end
-:: Version: 2.1.0 (2025-02-19)
+:: Version: 2.1.0 (2025-02-20)
 :: ================================================================
 
 title Roblox Performance Optimizer
@@ -70,32 +70,11 @@ echo [3/5] Analyzing system capabilities...
 
 :: Initialize detection variables
 set "SYS_CATEGORY=unknown"
-set "RAM_GB=0"
 set "GPU_VRAM_MB=0"
-set "CPU_CORES=0"
-set "CPU_FREQ_MHZ=0"
-set "OS_VERSION=0"
-set "SUPPORTS_DX11=false"
-set "IS_64BIT=false"
-set "HAS_SSD=false"
-
-:: RAM Detection
-for /f "tokens=2 delims==" %%a in ('wmic ComputerSystem get TotalPhysicalMemory /value 2^>nul') do (
-    set /a "RAM_GB=%%a / 1073741824"
-    echo [INFO] Detected !RAM_GB! GB RAM >> "%LOG_FILE%"
-)
-
-:: CPU Detection
-for /f "tokens=2 delims==" %%c in ('wmic cpu get NumberOfCores /value 2^>nul') do (
-    set "CPU_CORES=%%c"
-)
-for /f "tokens=2 delims==" %%d in ('wmic cpu get MaxClockSpeed /value 2^>nul') do (
-    set "CPU_FREQ_MHZ=%%d"
-)
-echo [INFO] CPU: !CPU_CORES! cores at !CPU_FREQ_MHZ! MHz >> "%LOG_FILE%"
+set "GPU_NAME=Unknown"
+set "SYS_AGE_YEARS=0"
 
 :: GPU Detection
-set "GPU_NAME=Unknown"
 set "GPU_FOUND=false"
 for /f "tokens=2 delims==" %%g in ('wmic PATH Win32_VideoController get AdapterRAM /value 2^>nul') do (
     if not "%%g"=="" (
@@ -108,65 +87,33 @@ for /f "tokens=2 delims==" %%n in ('wmic PATH Win32_VideoController get Name /va
 )
 echo [INFO] GPU: !GPU_NAME! with !GPU_VRAM_MB! MB VRAM >> "%LOG_FILE%"
 
-:: OS Detection
-for /f "tokens=2 delims==" %%o in ('wmic os get Version /value 2^>nul') do set "OS_VERSION=%%o"
-for /f "tokens=2 delims==" %%b in ('wmic os get OSArchitecture /value 2^>nul') do (
-    echo %%b | findstr /i "64" > nul && set "IS_64BIT=true"
-)
-echo [INFO] OS: Windows !OS_VERSION! (!IS_64BIT!) >> "%LOG_FILE%"
-
-:: DirectX Detection (Basic)
-reg query "HKLM\SOFTWARE\Microsoft\DirectX" /v Version >nul 2>&1
-if %errorlevel% equ 0 (
-    for /f "tokens=3" %%d in ('reg query "HKLM\SOFTWARE\Microsoft\DirectX" /v Version 2^>nul') do (
-        echo %%d | findstr "11" >nul 2>&1 && set "SUPPORTS_DX11=true"
-    )
+:: System Age Calculation
+for /f "tokens=2 delims==" %%y in ('wmic os get InstallDate /value 2^>nul') do (
+    set "INSTALL_DATE=%%y"
 )
 
-:: Disk Type Detection (Basic SSD detection)
-for /f "tokens=2 delims==" %%s in ('wmic diskdrive get Model /value 2^>nul') do (
-    echo %%s | findstr /i "SSD NVMe" >nul 2>&1 && set "HAS_SSD=true"
-)
+:: Extract the year from the InstallDate
+set "INSTALL_YEAR=%INSTALL_DATE:~0,4%"
+
+:: Get the current year robustly
+for /f "delims=" %%i in ('powershell -Command "Get-Date -Format yyyy"') do set "CURRENT_YEAR=%%i"
+
+:: Calculate system age
+set /a "SYS_AGE_YEARS=%CURRENT_YEAR% - %INSTALL_YEAR%"
+
+echo [INFO] System Age: %SYS_AGE_YEARS% years >> "%LOG_FILE%"
 
 :: ----------------------------------------------------------------
 :: SECTION 4: System Category Classification
 :: ----------------------------------------------------------------
 
-:: Define system categories
-if !RAM_GB! LEQ 2 (
-    if !CPU_CORES! LEQ 2 (
-        if !GPU_VRAM_MB! LEQ 256 (
-            set "SYS_CATEGORY=ultra_legacy"
-        ) else (
-            set "SYS_CATEGORY=legacy"
-        )
-    ) else (
-        set "SYS_CATEGORY=legacy"
-    )
-) else if !RAM_GB! LEQ 4 (
-    if !GPU_VRAM_MB! LEQ 512 (
-        set "SYS_CATEGORY=low_end"
-    ) else (
-        set "SYS_CATEGORY=mid_low"
-    )
-) else if !RAM_GB! LEQ 8 (
-    if !GPU_VRAM_MB! LEQ 1024 (
-        set "SYS_CATEGORY=mid_low"
-    ) else (
-        set "SYS_CATEGORY=mid_range"
-    )
-) else if !RAM_GB! LEQ 16 (
-    if !GPU_VRAM_MB! LEQ 2048 (
-        set "SYS_CATEGORY=mid_range"
-    ) else (
-        set "SYS_CATEGORY=high_mid"
-    )
+:: Define system categories based on GPU VRAM and system age
+if !GPU_VRAM_MB! GEQ 4096 (
+    set "SYS_CATEGORY=new"
+) else if !SYS_AGE_YEARS! LEQ 2 (
+    set "SYS_CATEGORY=new"
 ) else (
-    if !GPU_VRAM_MB! LEQ 4096 (
-        set "SYS_CATEGORY=high_mid"
-    ) else (
-        set "SYS_CATEGORY=high_end"
-    )
+    set "SYS_CATEGORY=old"
 )
 
 echo     System classification: !SYS_CATEGORY!
@@ -204,129 +151,7 @@ set COMMON_SETTINGS=!COMMON_SETTINGS!"DFFlagTextureQualityOverrideEnabled": true
 set COMMON_SETTINGS=!COMMON_SETTINGS!"FFlagHandleAltEnterFullscreenManually": false,
 
 :: System-specific configurations
-if "!SYS_CATEGORY!"=="ultra_legacy" (
-    (
-    echo {
-    echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 24,
-    echo   "DFIntConnectionMTUSize": 1200,
-    echo   "FFlagDebugGraphicsDisableDirect3D11": true,
-    echo   "FFlagDebugGraphicsPreferD3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11FL10": false,
-    echo   "DFIntTextureQualityOverride": 0,
-    echo   "FIntDebugForceMSAASamples": 0,
-    echo   "FFlagDisablePostFx": true,
-    echo   "FFlagCloudsReflectOnWater": false,
-    echo   "FIntRenderShadowIntensity": 0,
-    echo   "FFlagFastGPULightCulling3": false,
-    echo   "FFlagMovePrerender": false,
-    echo   "FFlagPreloadTextureData": false,
-    echo   "FFlagPreloadAllFonts": false,
-    echo   "DFIntHttpCurlConnectionTimeout": 90000,
-    echo   "DFIntMaxHttpRetryCount": 3,
-    echo   "DFIntHttpSocketPoolSize": 8,
-    echo   "FIntRobloxGuiBlurIntensity": 0,
-    echo   "FFlagEnableBetaFacialAnimation2": false,
-    echo   "DFFlagLoadCharacterLayeredClothingProperty2": false,
-    echo   "DFFlagEnableDynamicHeadByDefault": false,
-    echo   "DFIntDebugFRMQualityLevelOverride": 0,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 32,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 64,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 128,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 256,
-    echo   "DFFlagDebugPauseVoxelizer": true,
-    echo   "FIntTerrainArraySliceSize": 0,
-    echo   "FIntFRMMinGrassDistance": 0,
-    echo   "FIntFRMMaxGrassDistance": 0
-    echo }
-    ) > "!CLIENT_DIR!\ClientAppSettings.json"
-) else if "!SYS_CATEGORY!"=="legacy" (
-    (
-    echo {
-    echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 30,
-    echo   "DFIntConnectionMTUSize": 1400,
-    echo   "FFlagDebugGraphicsDisableDirect3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11FL10": true,
-    echo   "FFlagGraphicsEnableD3D10Compute": true,
-    echo   "DFIntTextureQualityOverride": 0,
-    echo   "FIntDebugForceMSAASamples": 0,
-    echo   "FFlagDisablePostFx": true,
-    echo   "FFlagCloudsReflectOnWater": false,
-    echo   "FIntRenderShadowIntensity": 0,
-    echo   "FFlagFastGPULightCulling3": false,
-    echo   "FFlagMovePrerender": false,
-    echo   "FFlagPreloadTextureData": false,
-    echo   "DFIntHttpCurlConnectionTimeout": 60000,
-    echo   "DFIntMaxHttpRetryCount": 2,
-    echo   "DFIntHttpSocketPoolSize": 16,
-    echo   "FIntRobloxGuiBlurIntensity": 0,
-    echo   "FFlagEnableBetaFacialAnimation2": false,
-    echo   "DFFlagLoadCharacterLayeredClothingProperty2": false,
-    echo   "DFIntDebugFRMQualityLevelOverride": 1,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 64,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 128,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 256,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 512
-    echo }
-    ) > "!CLIENT_DIR!\ClientAppSettings.json"
-) else if "!SYS_CATEGORY!"=="low_end" (
-    (
-    echo {
-    echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 60,
-    echo   "DFIntConnectionMTUSize": 1450,
-    echo   "FFlagDebugGraphicsDisableDirect3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11": !SUPPORTS_DX11!,
-    echo   "FFlagDebugGraphicsPreferD3D11FL10": true,
-    echo   "DFIntTextureQualityOverride": 1,
-    echo   "FIntDebugForceMSAASamples": 0,
-    echo   "FFlagDisablePostFx": false,
-    echo   "FFlagCloudsReflectOnWater": false,
-    echo   "FIntRenderShadowIntensity": 0,
-    echo   "FFlagFastGPULightCulling3": true,
-    echo   "FFlagMovePrerender": false,
-    echo   "FFlagPreloadTextureData": true,
-    echo   "FFlagPreloadAllFonts": true,
-    echo   "DFIntHttpCurlConnectionTimeout": 30000,
-    echo   "DFIntMaxHttpRetryCount": 2,
-    echo   "DFIntHttpSocketPoolSize": 32,
-    echo   "DFIntDebugFRMQualityLevelOverride": 2,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 128,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 256,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 384,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 512
-    echo }
-    ) > "!CLIENT_DIR!\ClientAppSettings.json"
-) else if "!SYS_CATEGORY!"=="mid_low" (
-    (
-    echo {
-    echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 60,
-    echo   "DFIntConnectionMTUSize": 1472,
-    echo   "FFlagDebugGraphicsDisableDirect3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11": true,
-    echo   "DFIntTextureQualityOverride": 2,
-    echo   "FIntDebugForceMSAASamples": 2,
-    echo   "FFlagDisablePostFx": false,
-    echo   "FFlagCloudsReflectOnWater": true,
-    echo   "FIntRenderShadowIntensity": 0,
-    echo   "FFlagFastGPULightCulling3": true,
-    echo   "FFlagMovePrerender": true,
-    echo   "FFlagPreloadTextureData": true,
-    echo   "FFlagPreloadAllFonts": true,
-    echo   "DFIntHttpCurlConnectionTimeout": 15000,
-    echo   "DFIntMaxHttpRetryCount": 1,
-    echo   "DFIntHttpSocketPoolSize": 48,
-    echo   "DFIntDebugFRMQualityLevelOverride": 3,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 256,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 384,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 512,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 768
-    echo }
-    ) > "!CLIENT_DIR!\ClientAppSettings.json"
-) else if "!SYS_CATEGORY!"=="mid_range" (
+if "!SYS_CATEGORY!"=="new" (
     (
     echo {
     echo   %COMMON_SETTINGS%
@@ -334,38 +159,11 @@ if "!SYS_CATEGORY!"=="ultra_legacy" (
     echo   "DFIntConnectionMTUSize": 1472,
     echo   "FFlagDebugGraphicsDisableDirect3D11": false,
     echo   "FFlagDebugGraphicsPreferD3D11": true,
-    echo   "DFIntTextureQualityOverride": 3,
-    echo   "FIntDebugForceMSAASamples": 4,
-    echo   "FFlagDisablePostFx": false,
-    echo   "FFlagCloudsReflectOnWater": true,
-    echo   "FIntRenderShadowIntensity": 1,
-    echo   "FFlagFastGPULightCulling3": true,
-    echo   "FFlagMovePrerender": true,
-    echo   "FFlagPreloadTextureData": true,
-    echo   "FFlagPreloadAllFonts": true,
-    echo   "DFIntHttpCurlConnectionTimeout": 15000,
-    echo   "DFIntMaxHttpRetryCount": 1,
-    echo   "DFIntHttpSocketPoolSize": 64,
-    echo   "DFIntDebugFRMQualityLevelOverride": 5,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 512,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 640,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 768,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 896
-    echo }
-    ) > "!CLIENT_DIR!\ClientAppSettings.json"
-) else if "!SYS_CATEGORY!"=="high_mid" (
-    (
-    echo {
-    echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 240,
-    echo   "DFIntConnectionMTUSize": 1472,
-    echo   "FFlagDebugGraphicsDisableDirect3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11": true,
     echo   "DFIntTextureQualityOverride": 5,
-    echo   "FIntDebugForceMSAASamples": 4,
+    echo   "FIntDebugForceMSAASamples": 8,
     echo   "FFlagDisablePostFx": false,
     echo   "FFlagCloudsReflectOnWater": true,
-    echo   "FIntRenderShadowIntensity": 1,
+    echo   "FIntRenderShadowIntensity": 2,
     echo   "FFlagFastGPULightCulling3": true,
     echo   "FFlagMovePrerender": true,
     echo   "FFlagPreloadTextureData": true,
@@ -384,27 +182,27 @@ if "!SYS_CATEGORY!"=="ultra_legacy" (
     (
     echo {
     echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 360,
-    echo   "DFIntConnectionMTUSize": 1472,
+    echo   "DFIntTaskSchedulerTargetFps": 60,
+    echo   "DFIntConnectionMTUSize": 1400,
     echo   "FFlagDebugGraphicsDisableDirect3D11": false,
-    echo   "FFlagDebugGraphicsPreferD3D11": true,
-    echo   "DFIntTextureQualityOverride": 7,
-    echo   "FIntDebugForceMSAASamples": 8,
-    echo   "FFlagDisablePostFx": false,
-    echo   "FFlagCloudsReflectOnWater": true,
-    echo   "FIntRenderShadowIntensity": 2,
-    echo   "FFlagFastGPULightCulling3": true,
-    echo   "FFlagMovePrerender": true,
+    echo   "FFlagDebugGraphicsPreferD3D11": false,
+    echo   "DFIntTextureQualityOverride": 1,
+    echo   "FIntDebugForceMSAASamples": 2,
+    echo   "FFlagDisablePostFx": true,
+    echo   "FFlagCloudsReflectOnWater": false,
+    echo   "FIntRenderShadowIntensity": 0,
+    echo   "FFlagFastGPULightCulling3": false,
+    echo   "FFlagMovePrerender": false,
     echo   "FFlagPreloadTextureData": true,
     echo   "FFlagPreloadAllFonts": true,
-    echo   "DFIntHttpCurlConnectionTimeout": 10000,
-    echo   "DFIntMaxHttpRetryCount": 1,
-    echo   "DFIntHttpSocketPoolSize": 192,
-    echo   "DFIntDebugFRMQualityLevelOverride": 10,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 1024,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 1536,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 2048,
-    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 2560
+    echo   "DFIntHttpCurlConnectionTimeout": 30000,
+    echo   "DFIntMaxHttpRetryCount": 2,
+    echo   "DFIntHttpSocketPoolSize": 32,
+    echo   "DFIntDebugFRMQualityLevelOverride": 2,
+    echo   "DFIntCSGLevelOfDetailSwitchingDistance": 128,
+    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL12": 256,
+    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL23": 384,
+    echo   "DFIntCSGLevelOfDetailSwitchingDistanceL34": 512
     echo }
     ) > "!CLIENT_DIR!\ClientAppSettings.json"
 )
@@ -415,12 +213,8 @@ echo # ROBLOX OPTIMIZATION REPORT
 echo Generated: %date% %time%
 echo.
 echo ## SYSTEM INFORMATION
-echo - RAM: !RAM_GB! GB
-echo - CPU: !CPU_CORES! cores at !CPU_FREQ_MHZ! MHz
 echo - GPU: !GPU_NAME! with !GPU_VRAM_MB! MB VRAM
-echo - OS: Windows !OS_VERSION! (!IS_64BIT!)
-echo - Storage: !HAS_SSD!
-echo - DirectX11 Support: !SUPPORTS_DX11!
+echo - System Age: !SYS_AGE_YEARS! years
 echo.
 echo ## OPTIMIZATION CATEGORY
 echo Your system has been classified as: !SYS_CATEGORY!
@@ -428,7 +222,6 @@ echo.
 echo ## KEY OPTIMIZATIONS APPLIED
 echo - Target FPS: !DFIntTaskSchedulerTargetFps!
 echo - Network Packet Size: !DFIntConnectionMTUSize! bytes
-echo - Graphics API: !FFlagDebugGraphicsPreferD3D11! (DirectX 11)
 echo - Texture Quality Level: !DFIntTextureQualityOverride!
 echo - Anti-aliasing Level: !FIntDebugForceMSAASamples!
 echo.
