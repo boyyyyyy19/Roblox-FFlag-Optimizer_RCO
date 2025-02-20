@@ -1,192 +1,57 @@
 # Roblox Performance Optimizer
-A specialized batch script that dynamically configures Roblox's client settings for optimal performance through intelligent hardware detection and automated configuration management.
 
-## Core Features
+## Overview
 
-### Hardware Detection System
-- Automated RAM capacity detection (8GB threshold)
-- GPU VRAM capacity analysis (4GB threshold)
-- Dynamic settings adaptation based on hardware capabilities
-- Intelligent system capability assessment
+The Roblox Performance Optimizer is a batch script designed to enhance the performance of Roblox on various system configurations, ranging from legacy to high-end systems. This script automates the process of detecting your system's capabilities and applying optimized settings to improve the gaming experience.
 
-### Performance Optimization Framework
-- FPS uncapping system (360 FPS maximum)
-- Advanced network latency optimization protocol
-- Hardware-aware DirectX configuration
-- Resource-based texture quality management
-- Dynamic MSAA implementation
-- Comprehensive ping optimization system
+## Features
 
-## Technical Specifications
+- **Automatic System Detection**: Detects your system's RAM, CPU, GPU, OS version, DirectX support, and storage type.
+- **System Classification**: Classifies your system into categories such as ultra_legacy, legacy, low_end, mid_low, mid_range, high_mid, and high_end.
+- **Optimized Configuration**: Applies tailored settings based on your system's classification to improve Roblox performance.
+- **Detailed Reporting**: Generates a detailed optimization report outlining the applied settings and system information.
+- **User-Friendly Interface**: Provides clear prompts and options for post-optimization actions.
 
-### Core Performance Parameters
-```json
-{
-  "DFIntTaskSchedulerTargetFps": 360,
-  "DFIntConnectionMTUSize": 900,
-  "FIntRakNetResendBufferArrayLength": 128,
-  "DFIntNetworkPrediction": 120,
-  "DFIntServerTickRate": 60,
-  "FIntDebugForceMSAASamples": "8/4 (GPU-dependent)",
-  "DFIntTextureQualityOverride": "3/0 (RAM-dependent)",
-  "FFlagDisablePostFx": true,
-  "FFlagFastGPULightCulling3": true,
-  "DFIntDebugFRMQualityLevelOverride": 4
-}
-```
+## Requirements
 
-### Network Optimization Configuration
-```json
-{
-  "FFlagOptimizeNetwork": true,
-  "FFlagOptimizeNetworkRouting": true,
-  "FFlagOptimizeNetworkTransport": true,
-  "FFlagOptimizeServerTickRate": true,
-  "DFIntServerPhysicsUpdateRate": 60,
-  "DFIntRakNetResendRttMultiple": 1,
-  "DFIntRaknetBandwidthPingSendEveryXSeconds": 1,
-  "DFIntOptimizePingThreshold": 50,
-  "DFIntPlayerNetworkUpdateRate": 60,
-  "DFIntNetworkLatencyTolerance": 1,
-  "DFIntMinimalNetworkPrediction": 0.1
-}
-```
+- Windows Operating System
+- Roblox installed on your system
 
-### CSG Level of Detail Configuration
-```json
-{
-  "DFIntCSGLevelOfDetailSwitchingDistance": 250,
-  "DFIntCSGLevelOfDetailSwitchingDistanceL12": 500,
-  "DFIntCSGLevelOfDetailSwitchingDistanceL23": 750,
-  "DFIntCSGLevelOfDetailSwitchingDistanceL34": 1000
-}
-```
+## Usage
 
-## Implementation Guide
+1. **Download the Script**: Save the script to a `.bat` file, for example, `RobloxOptimizer.bat`.
+2. **Run the Script**: Double-click the `.bat` file to execute the script.
+3. **Follow the Prompts**: The script will guide you through the optimization process and provide options at the end.
 
-### Prerequisites
-- Operating System: Windows 7 or later
-- Minimum RAM: 4GB
-- GPU: DirectX 10 compatible
-- Roblox: Latest version installed
-- Network: Stable internet connection
+## Script Sections
 
-### Optimal System Configuration
-- Operating System: Windows 10/11
-- RAM: 8GB or higher
-- GPU: DirectX 11 compatible with 4GB+ VRAM
-- Storage: 100MB free space
-- Network: Low-latency internet connection
+1. **Environment Preparation**: Sets up necessary directories and initializes logging.
+2. **Roblox Installation Detection**: Detects the latest Roblox version installed on your system.
+3. **System Capability Analysis**: Analyzes your system's hardware and software capabilities.
+4. **System Category Classification**: Classifies your system based on the detected capabilities.
+5. **Configuration Generation**: Generates and applies optimized settings based on the system classification.
+6. **Finalization**: Completes the optimization process and provides post-optimization options.
 
-### Installation Protocol
-1. Download the batch script
-2. Execute with administrative privileges
-3. Automated Process:
-   - Directory structure creation
-   - Hardware capability assessment
-   - Network configuration optimization
-   - Settings optimization deployment
-   - Configuration verification
+## Configuration Files
 
-## Technical Architecture
+- **ClientAppSettings.json**: Contains the optimized settings applied to Roblox.
+- **OptimizationReport.txt**: A detailed report of the applied settings and system information.
 
-### Graphics Pipeline Configuration
-- DirectX 11 enablement for modern hardware
-- DirectX 10 fallback system for legacy support
-- RAM-dependent texture quality scaling
-- GPU-dependent MSAA implementation
-- Optimized rendering pipeline
+## Troubleshooting
 
-### Network Optimization Layer
-```json
-{
-  "DFIntConnectionMTUSize": 900,
-  "FIntRakNetResendBufferArrayLength": 128,
-  "DFIntNetworkPrediction": 120,
-  "DFIntPlayerNetworkUpdateQueueSize": 20,
-  "FFlagOptimizeNetwork": true,
-  "FFlagOptimizeNetworkRouting": true
-}
-```
+If you encounter any issues after applying the optimizations:
+1. Delete the `ClientAppSettings.json` file.
+2. Launch Roblox normally to reset to default settings.
+3. Edit the script to try a different optimization category.
 
-### Performance Optimization Layer
-```json
-{
-  "FFlagDisablePostFx": true,
-  "FIntFRMMinGrassDistance": 0,
-  "FFlagDebugRenderingSetDeterministic": true,
-  "FFlagFastGPULightCulling3": true,
-  "FFlagPreloadTextureData": true,
-  "DFFlagDebugPerfMode": true
-}
-```
+## License
 
-### Interface Optimization
-- Blur effect deactivation
-- Beta feature deactivation
-- Menu system optimization
-- Telemetry system deactivation
-- Voice chat volume normalization
+This script is provided as-is without any warranty. Feel free to modify and distribute it as needed.
 
-## Troubleshooting Framework
+## Contact
 
-### Error Resolution Protocol
-1. Verify Roblox installation integrity
-2. Confirm administrative privileges
-3. Validate system requirements compliance
-4. Clear existing ClientSettings directory if necessary
-5. Verify network configuration
+For any questions or issues, please open an issue on the repository or contact the maintainer.
 
-### System Verification
-- Configuration deployment verification
-- Hardware detection system validation
-- Settings application confirmation
-- Network optimization validation
+---
 
-## Technical Notes
-
-### Implementation Considerations
-- Automatic version detection system
-- Configuration persistence across sessions
-- Update-resistant setting implementation
-- Official FFlag implementation
-- Network protocol optimization
-
-### Security Framework
-- Client-side configuration only
-- No system file modification
-- Reversible implementation
-- Official parameter utilization
-- Safe network optimization
-
-## Maintenance Protocol
-
-### Regular Updates
-- Performance optimization refinements
-- Version compatibility maintenance
-- Hardware detection improvements
-- Feature enhancement implementation
-- Network configuration updates
-
-### Version Control
-- Configuration tracking
-- Setting persistence management
-- Update impact mitigation
-- Compatibility maintenance
-- Network parameter versioning
-
-## Technical Specifications
-
-### Minimum Requirements
-- Processor: x64 compatible
-- RAM: 4GB minimum
-- GPU: DirectX 10 support
-- Storage: 50MB available
-- Network: Basic internet connection
-
-### Recommended Configuration
-- Processor: Modern x64 multi-core
-- RAM: 8GB or higher
-- GPU: DirectX 11 with 4GB+ VRAM
-- Storage: 100MB available
-- Network: Low-latency internet connection
+**Note**: Always back up your configuration files before running optimization scripts.
