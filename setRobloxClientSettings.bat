@@ -152,15 +152,19 @@ set COMMON_SETTINGS=!COMMON_SETTINGS!"FFlagHandleAltEnterFullscreenManually": fa
 
 :: System-specific configurations
 if "!SYS_CATEGORY!"=="new" (
+    set "DFIntTaskSchedulerTargetFps=144"
+    set "DFIntConnectionMTUSize=1472"
+    set "DFIntTextureQualityOverride=5"
+    set "FIntDebugForceMSAASamples=8"
     (
     echo {
     echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 144,
-    echo   "DFIntConnectionMTUSize": 1472,
+    echo   "DFIntTaskSchedulerTargetFps": !DFIntTaskSchedulerTargetFps!,
+    echo   "DFIntConnectionMTUSize": !DFIntConnectionMTUSize!,
     echo   "FFlagDebugGraphicsDisableDirect3D11": false,
     echo   "FFlagDebugGraphicsPreferD3D11": true,
-    echo   "DFIntTextureQualityOverride": 5,
-    echo   "FIntDebugForceMSAASamples": 8,
+    echo   "DFIntTextureQualityOverride": !DFIntTextureQualityOverride!,
+    echo   "FIntDebugForceMSAASamples": !FIntDebugForceMSAASamples!,
     echo   "FFlagDisablePostFx": false,
     echo   "FFlagCloudsReflectOnWater": true,
     echo   "FIntRenderShadowIntensity": 2,
@@ -179,15 +183,19 @@ if "!SYS_CATEGORY!"=="new" (
     echo }
     ) > "!CLIENT_DIR!\ClientAppSettings.json"
 ) else (
+    set "DFIntTaskSchedulerTargetFps=60"
+    set "DFIntConnectionMTUSize=1400"
+    set "DFIntTextureQualityOverride=1"
+    set "FIntDebugForceMSAASamples=2"
     (
     echo {
     echo   %COMMON_SETTINGS%
-    echo   "DFIntTaskSchedulerTargetFps": 60,
-    echo   "DFIntConnectionMTUSize": 1400,
+    echo   "DFIntTaskSchedulerTargetFps": !DFIntTaskSchedulerTargetFps!,
+    echo   "DFIntConnectionMTUSize": !DFIntConnectionMTUSize!,
     echo   "FFlagDebugGraphicsDisableDirect3D11": false,
     echo   "FFlagDebugGraphicsPreferD3D11": false,
-    echo   "DFIntTextureQualityOverride": 1,
-    echo   "FIntDebugForceMSAASamples": 2,
+    echo   "DFIntTextureQualityOverride": !DFIntTextureQualityOverride!,
+    echo   "FIntDebugForceMSAASamples": !FIntDebugForceMSAASamples!,
     echo   "FFlagDisablePostFx": true,
     echo   "FFlagCloudsReflectOnWater": false,
     echo   "FIntRenderShadowIntensity": 0,
@@ -206,6 +214,15 @@ if "!SYS_CATEGORY!"=="new" (
     echo }
     ) > "!CLIENT_DIR!\ClientAppSettings.json"
 )
+
+:: Display the settings
+echo     Optimized Settings:
+echo     -------------------------------------
+echo     - Target FPS: !DFIntTaskSchedulerTargetFps!
+echo     - Network Packet Size: !DFIntConnectionMTUSize! bytes
+echo     - Texture Quality Level: !DFIntTextureQualityOverride!
+echo     - Anti-aliasing Level: !FIntDebugForceMSAASamples!
+echo     -------------------------------------
 
 :: Create configuration report
 (
