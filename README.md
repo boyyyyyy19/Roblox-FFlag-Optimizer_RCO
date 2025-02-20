@@ -2,56 +2,49 @@
 
 ## Overview
 
-The Roblox Performance Optimizer is a batch script designed to enhance the performance of Roblox on various system configurations, ranging from legacy to high-end systems. This script automates the process of detecting your system's capabilities and applying optimized settings to improve the gaming experience.
+The Roblox Performance Optimizer is a batch script designed to enhance the performance of Roblox on Windows systems. It analyzes your system's capabilities and applies optimized settings to improve gameplay smoothness and visual quality based on your hardware configuration.
 
 ## Features
 
-- **Automatic System Detection**: Detects your system's RAM, CPU, GPU, OS version, DirectX support, and storage type.
-- **System Classification**: Classifies your system into categories such as ultra_legacy, legacy, low_end, mid_low, mid_range, high_mid, and high_end.
-- **Optimized Configuration**: Applies tailored settings based on your system's classification to improve Roblox performance.
-- **Detailed Reporting**: Generates a detailed optimization report outlining the applied settings and system information.
-- **User-Friendly Interface**: Provides clear prompts and options for post-optimization actions.
+- **Automatic System Analysis**: Detects GPU capabilities and system age to classify your system as "new" or "old".
+- **Optimized Settings**: Applies tailored settings for target FPS, network packet size, texture quality, and anti-aliasing levels.
+- **Configuration Report**: Generates a detailed report of the applied settings and system information.
+- **User-Friendly Interface**: Provides options to open the configuration folder, start Roblox, or view the optimization report after completion.
 
 ## Requirements
 
-- Windows Operating System
-- Roblox installed on your system
+- Windows operating system
+- Roblox installed on the system
+- Administrative privileges to run the script and apply settings
 
 ## Usage
 
-1. **Download the Script**: Save the script to a `.bat` file, for example, `RobloxOptimizer.bat`.
-2. **Run the Script**: Double-click the `.bat` file to execute the script.
-3. **Follow the Prompts**: The script will guide you through the optimization process and provide options at the end.
+1. **Download the Script**: Save the `RobloxPerformanceOptimizer.bat` script to a location on your computer.
 
-## Script Sections
+2. **Run the Script**:
+   - Right-click the script file and select "Run as administrator".
+   - Follow the on-screen instructions to optimize Roblox performance.
 
-1. **Environment Preparation**: Sets up necessary directories and initializes logging.
-2. **Roblox Installation Detection**: Detects the latest Roblox version installed on your system.
-3. **System Capability Analysis**: Analyzes your system's hardware and software capabilities.
-4. **System Category Classification**: Classifies your system based on the detected capabilities.
-5. **Configuration Generation**: Generates and applies optimized settings based on the system classification.
-6. **Finalization**: Completes the optimization process and provides post-optimization options.
+3. **Review the Report**: After the optimization is complete, you can view the detailed report to see the applied settings and system information.
 
-## Configuration Files
+## Important Notes
 
-- **ClientAppSettings.json**: Contains the optimized settings applied to Roblox.
-- **OptimizationReport.txt**: A detailed report of the applied settings and system information.
+- **Backup Settings**: It is recommended to backup your current Roblox settings before running the optimizer.
+- **Compatibility**: The script is designed for Windows systems and may not work correctly on other operating systems.
+- **Troubleshooting**: If you experience issues after applying the optimizations, you can delete the `ClientAppSettings.json` file in the Roblox configuration directory to reset to default settings.
 
-## Troubleshooting
+## Disclaimer
 
-If you encounter any issues after applying the optimizations:
-1. Delete the `ClientAppSettings.json` file.
-2. Launch Roblox normally to reset to default settings.
-3. Edit the script to try a different optimization category.
+This script is provided as-is, and the author is not responsible for any damages or issues that may arise from its use. Always ensure you have backups of important data before running automated scripts.
+
+## Contributions
+
+Contributions to improve the script are welcome. Please submit a pull request or open an issue for any bugs or feature requests.
 
 ## License
 
-This script is provided as-is without any warranty. Feel free to modify and distribute it as needed.
-
-## Contact
-
-For any questions or issues, please open an issue on the repository or contact the maintainer.
+This script is licensed under the MIT License. See the LICENSE file for more information.
 
 ---
 
-**Note**: Always back up your configuration files before running optimization scripts.
+Feel free to customize this `README.md` file to better fit your project's specific needs or add additional sections as necessary.
