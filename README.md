@@ -41,9 +41,7 @@ This script is provided as-is, and the author is not responsible for any damages
 
 Contributions to improve the script are welcome. Please submit a pull request or open an issue for any bugs or feature requests.
 
-## License
 
-This script is licensed under the MIT License. See the LICENSE file for more information.
 
 ---
 
